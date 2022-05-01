@@ -1,18 +1,17 @@
+
 from datetime import datetime
 
 
 # Webscrape URL's
-MLB_BASE_URL = "https://www.baseball-reference.com/leagues/majors/"
-
-METRIC_PATH = {
-    "Batting": "-standard-batting.shtml",
-    "Starting Pitching": "-starter-pitching.shtml",
-    "Relief Pitching": "-reliever-pitching.shtml",
-    "Fielding": "-standard-fielding.shtml",
+MLB_BASE_URL = "https://baseball-reference.com/teams/ATL/"
+METRIC_PATH = { 
+    "Batting": "-standard-batting.html",
+    "Starting Pitching": "-starter-pitching.html",
+    "Relief Pitching": "-reliever-pitching.html",
+    "Fielding": "-standard-fielding.html",
 }
-
 # MLB available seasons for data scraping
-MIN_YEAR = 2000
+MIN_YEAR = 2012
 MAX_YEAR = (
     datetime.today().year if datetime.today().month >= 4 else datetime.today().year - 1
 )  # Current year only if regular season is ongoing/finished
@@ -49,5 +48,3 @@ Fld% Rank: Fld% (Standard fielding percentage)
 Good Plays Rank: Rgood (Based on exceptional plays vs obvious errors committed)
 DP Rank: DP (Number of double plays completed)
 """
-#hi hinton
-#hi hinton
