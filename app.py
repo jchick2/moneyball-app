@@ -89,22 +89,22 @@ def mlb_scrape(
 def display():
 
     # Sidebar configurations
-    sl.sidebar.write("# Major League Baseball")
+    sl.sidebar.write("# MLB Menu")
     season = sl.sidebar.selectbox(
         "Season:", list(reversed(range(MIN_YEAR, MAX_YEAR + 1)))
     )
     metric_type = sl.sidebar.selectbox("Metric:", METRIC_PATH.keys())
 
     if metric_type == "Starting Pitching":
-        all_team_table, stats_avg = mlb_scrape(
+        all_player_table, stats_avg = mlb_scrape(
             metric_type=metric_type, year=season, pct_cols=["QS%"]
         )
     elif metric_type == "Relief Pitching":
-        all_team_table, stats_avg = mlb_scrape(
+        all_player_table, stats_avg = mlb_scrape(
             metric_type=metric_type, year=season, pct_cols=["SV%", "IS%"]
         )
     else:
-        all_team_table, stats_avg = mlb_scrape(metric_type=metric_type, year=season)
+        all_player_table, stats_avg = mlb_scrape(metric_type=metric_type, year=season)
 
     # App page title/source
     sl.title(f"MLB Team {metric_type} Analysis for {season} Season")
@@ -113,19 +113,19 @@ def display():
     )
 
     # Show dataframe
-    sl.dataframe(all_team_table)
+    sl.dataframe(all_player_table)
 
-    team_select = sl.selectbox("Select Team:", [""] + list(all_team_table.index))
+    player_select = sl.selectbox("Select Team:", [""] + list(all_player_table.index))
 
     # Proceed once team is selected
-    if not team_select:
+    if not player_select:
         sl.warning("No option is selected")
 
     else:
-        team_stats = all_team_table[all_team_table.index == team_select].to_dict(
+        player_stats = all_player_table[all_player_table.index == player_select].to_dict(
             "records"
         )[0]
-        all_team_stats = all_team_table.to_dict("list")
+        all_player_stats = all_player_table.to_dict("list")
 
         # Setup figure
         
@@ -141,30 +141,30 @@ def display():
             # Efficiency Rank: Rate of non-HR runs scored out of run scoring opportunities
 
             overall_rank = metric_rank(
-                team_stats["R/G"],
-                all_team_stats["R/G"],
+                player_stats["R/G"],
+                all_player_stats["R/G"],
             )
             hit_rank = metric_rank(
-                team_stats["BA"],
-                all_team_stats["BA"],
+                player_stats["BA"],
+                all_player_stats["BA"],
             )
             power_rank = metric_rank(
-                team_stats["HR"],
-                all_team_stats["HR"],
+                player_stats["HR"],
+                all_player_stats["HR"],
             )
             ob_rank = metric_rank(
-                team_stats["OBP"],
-                all_team_stats["OBP"],
+                player_stats["OBP"],
+                all_player_stats["OBP"],
             )
             steal_rank = metric_rank(
-                team_stats["SB"] - team_stats["CS"],
-                np.array(all_team_stats["SB"]) - np.array(all_team_stats["CS"]),
+                player_stats["SB"] - player_stats["CS"],
+                np.array(all_player_stats["SB"]) - np.array(all_player_stats["CS"]),
             )
-            temp_arr = np.array(all_team_stats["R"]) - np.array(all_team_stats["HR"])
+            temp_arr = np.array(all_player_stats["R"]) - np.array(all_player_stats["HR"])
             efficiency_rank = metric_rank(
-                (team_stats["R"] - team_stats["HR"])
-                / (team_stats["R"] - team_stats["HR"] + team_stats["LOB"]),
-                temp_arr / (temp_arr + np.array(all_team_stats["LOB"])),
+                (player_stats["R"] - player_stats["HR"])
+                / (player_stats["R"] - player_stats["HR"] + player_stats["LOB"]),
+                temp_arr / (temp_arr + np.array(all_player_stats["LOB"])),
             )
 
             rankings = {
@@ -197,8 +197,8 @@ def display():
             # Bar Plot - Overall ranking
             bar_rank_plot(
                 metric="R/G",
-                team=team_select,
-                data=all_team_table,
+                player=player_select,
+                data=all_player_table,
                 rank_by_top=True,
                 title=f"Overall Ranking: {overall_rank}",
                 color=(0.5529411764705883, 0.8274509803921568, 0.7803921568627451),
@@ -213,25 +213,25 @@ def display():
             # Efficiency Rank: IP/GS
             # Stamina Rank: 1*(80-99) + 1.5*(100-119) + 2*(≥120)
 
-            overall_rank = metric_rank(team_stats["GmScA"], all_team_stats["GmScA"])
-            qs_rank = metric_rank(team_stats["QS%"], all_team_stats["QS%"])
+            overall_rank = metric_rank(player_stats["GmScA"], all_player_stats["GmScA"])
+            qs_rank = metric_rank(player_stats["QS%"], all_player_stats["QS%"])
             winning_rank = metric_rank(
-                team_stats["Wgs"] + team_stats["Wlst"] - team_stats["Lsv"],
-                np.array(all_team_stats["Wgs"])
-                + np.array(all_team_stats["Wlst"])
-                - np.array(all_team_stats["Lsv"]),
+                player_stats["Wgs"] + player_stats["Wlst"] - player_stats["Lsv"],
+                np.array(all_player_stats["Wgs"])
+                + np.array(all_player_stats["Wlst"])
+                - np.array(all_player_stats["Lsv"]),
             )
             stamina_rank = metric_rank(
-                team_stats["80-99"]
-                + 1.5 * team_stats["100-119"]
-                + 2 * team_stats["≥120"],
-                np.array(all_team_stats["80-99"])
-                + 1.5 * np.array(all_team_stats["100-119"])
-                + 2 * np.array(all_team_stats["≥120"]),
+                player_stats["80-99"]
+                + 1.5 * player_stats["100-119"]
+                + 2 * player_stats["≥120"],
+                np.array(all_player_stats["80-99"])
+                + 1.5 * np.array(all_player_stats["100-119"])
+                + 2 * np.array(all_player_stats["≥120"]),
             )
             efficiency_rank = metric_rank(
-                team_stats["IP/GS"],
-                all_team_stats["IP/GS"],
+                player_stats["IP/GS"],
+                all_player_stats["IP/GS"],
             )
 
             rankings = {
@@ -262,8 +262,8 @@ def display():
             # Bar Plot - Overall ranking
             bar_rank_plot(
                 metric="GmScA",
-                team=team_select,
-                data=all_team_table,
+                player=player_select,
+                data=all_player_table,
                 rank_by_top=True,
                 title=f"Overall Ranking: {overall_rank}",
                 color=(0.5529411764705883, 0.8274509803921568, 0.7803921568627451),
@@ -280,17 +280,17 @@ def display():
             # Leverage pressure: aLI
 
             overall_rank = metric_rank(
-                team_stats["IS%"], all_team_stats["IS%"], max_as_top=False
+                player_stats["IS%"], all_player_stats["IS%"], max_as_top=False
             )
-            save_count_rank = metric_rank(team_stats["SV"], all_team_stats["SV"])
-            hold_count_rank = metric_rank(team_stats["Hold"], all_team_stats["Hold"])
-            save_pct_rank = metric_rank(team_stats["SV%"], all_team_stats["SV%"])
+            save_count_rank = metric_rank(player_stats["SV"], all_player_stats["SV"])
+            hold_count_rank = metric_rank(player_stats["Hold"], all_player_stats["Hold"])
+            save_pct_rank = metric_rank(player_stats["SV%"], all_player_stats["SV%"])
             win_pct_rank = metric_rank(
-                team_stats["Wgr"] / (team_stats["Wgr"] + team_stats["Lgr"]),
-                np.array(all_team_stats["Wgr"])
-                / (np.array(all_team_stats["Wgr"]) + np.array(all_team_stats["Lgr"])),
+                player_stats["Wgr"] / (player_stats["Wgr"] + player_stats["Lgr"]),
+                np.array(all_player_stats["Wgr"])
+                / (np.array(all_player_stats["Wgr"]) + np.array(all_player_stats["Lgr"])),
             )
-            lvg_pressure_rank = metric_rank(team_stats["aLI"], all_team_stats["aLI"])
+            lvg_pressure_rank = metric_rank(player_stats["aLI"], all_player_stats["aLI"])
 
             rankings = {
                 "overall": overall_rank,
@@ -322,8 +322,8 @@ def display():
             # Bar Plot - Overall ranking
             bar_rank_plot(
                 metric="IS%",
-                team=team_select,
-                data=all_team_table,
+                player=player_select,
+                data=all_player_table,
                 rank_by_top=False,
                 title=f"Overall Ranking: {overall_rank}",
                 color=(0.5529411764705883, 0.8274509803921568, 0.7803921568627451),
@@ -339,12 +339,12 @@ def display():
             # Defensive Runs Saved Rank: Rdrs/yr
             # Good Plays Rank: Rgood
 
-            overall_rank = metric_rank(team_stats["Rtot/yr"], all_team_stats["Rtot/yr"])
-            def_eff_rank = metric_rank(team_stats["DefEff"], all_team_stats["DefEff"])
-            fielding_rank = metric_rank(team_stats["Fld%"], all_team_stats["Fld%"])
-            dp_rank = metric_rank(team_stats["DP"], all_team_stats["DP"])
-            drs_rank = metric_rank(team_stats["Rdrs/yr"], all_team_stats["Rdrs/yr"])
-            good_plays_rank = metric_rank(team_stats["Rgood"], all_team_stats["Rgood"])
+            overall_rank = metric_rank(player_stats["Rtot/yr"], all_player_stats["Rtot/yr"])
+            def_eff_rank = metric_rank(player_stats["DefEff"], all_player_stats["DefEff"])
+            fielding_rank = metric_rank(player_stats["Fld%"], all_player_stats["Fld%"])
+            dp_rank = metric_rank(player_stats["DP"], all_player_stats["DP"])
+            drs_rank = metric_rank(player_stats["Rdrs/yr"], all_player_stats["Rdrs/yr"])
+            good_plays_rank = metric_rank(player_stats["Rgood"], all_player_stats["Rgood"])
 
             rankings = {
                 "overall": overall_rank,
@@ -376,8 +376,8 @@ def display():
             # Bar Plot - Overall ranking
             bar_rank_plot(
                 metric="Rtot/yr",
-                team=team_select,
-                data=all_team_table,
+                player=player_select,
+                data=all_player_table,
                 rank_by_top=True,
                 title=f"Overall Ranking: {overall_rank}",
                 color=(0.5529411764705883, 0.8274509803921568, 0.7803921568627451),
@@ -389,5 +389,7 @@ def display():
 
 if __name__ == "__main__":
     display()
+
+# TODO: Change plot theme
 
 # TODO: Change plot theme
