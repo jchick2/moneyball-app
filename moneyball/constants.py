@@ -3,6 +3,7 @@ from datetime import datetime
 
 # Webscrape URL's
 MLB_BASE_URL = "https://www.baseball-reference.com/leagues/majors/"
+
 METRIC_PATH = {
     "Batting": "-standard-batting.shtml",
     "Starting Pitching": "-starter-pitching.shtml",
@@ -48,3 +49,5 @@ Fld% Rank: Fld% (Standard fielding percentage)
 Good Plays Rank: Rgood (Based on exceptional plays vs obvious errors committed)
 DP Rank: DP (Number of double plays completed)
 """
+#hi hinton
+#hi hinton
