@@ -1,0 +1,20 @@
+- [x] Baseball App Sprint 1
+  - [x] Approved topic for project
+  - [x] Have a Github account and join KSU-IS organization
+  - [x] Be associated with ownership of a code repository in KSU-IS organization
+  - [x] Edited and commited changes in a readme.md file in repository commits should show in Github
+  - [x] Explored at least one existing Python code base related to project and evaluated it
+- [x] Baseball App Sprint 2
+  - [x] Explore how to change the scrape URL to pull alternative data 
+  - [x] Find all code inconsistencies within the original source code and change to align with changes committed
+  - [x] Edit the GUI options to fit the vision for the project
+  - [x] Make additioal changes if necessary
+- [ ] Baseball App Sprint 3
+  - [x] Complete 1 slide PPT
+  - [x] Test
+  - [x] Make changes
+  - [ ] Test until running
+- [ ] Final Sprint/Presentation
+  - [x] Create PPT
+  - [ ] Prepare to go over code and explain its purpose
+  - [ ] Present project
