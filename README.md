@@ -79,7 +79,7 @@ Currently, there are 4 `Metric` available. Here is a breakdown of the category-b
 | **Defensive Efficiency** | Balls in play converted into outs | `DefEff`
 | **DRS** | Relative number of defensive runs saved or cost | `Rdrs/yr`
 | **Fld%** | Standard fielding percentage | `Fld%`
-| **Good Plays** | Good Plays/Misplays runs above average | `Rgood`
+| **Good Plays** | Good Plays/Misplays runs above average | `GoodPlay`
 | **DP** | Number of double plays completed | `DP`
 | ***OVERALL***** | [Total Zone Runs](https://www.baseball-reference.com/about/total_zone.shtml): Considering outfield arms, infield double play induces, catcher efficiency | `Rtot/yr`
 
